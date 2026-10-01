@@ -5,7 +5,6 @@ import '../../providers/auth_provider.dart';
 import '../../providers/library_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_typography.dart';
-import '../admin/admin_shell.dart';
 import '../auth/login_screen.dart';
 import '../main_shell.dart';
 
@@ -79,16 +78,11 @@ class _SplashScreenState extends State<SplashScreen>
         final Widget destination;
 
         if (auth.isAuthenticated || library.isLoggedIn) {
-          if (auth.isAdmin || library.userRole == 'admin') {
-            library.loginAsAdmin();
-            destination = const AdminShell();
-          } else {
-            library.loginAsReader(
-              name: auth.displayName,
-              isFirstTimeSignUp: false,
-            );
-            destination = const MainShell();
-          }
+          library.loginAsReader(
+            name: auth.displayName,
+            isFirstTimeSignUp: false,
+          );
+          destination = const MainShell();
         } else {
           destination = const LoginScreen();
         }

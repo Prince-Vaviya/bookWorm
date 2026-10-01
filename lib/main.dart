@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
-import 'providers/admin_provider.dart';
 import 'providers/library_provider.dart';
 import 'providers/reader_provider.dart';
 import 'screens/splash/splash_screen.dart';
@@ -42,7 +41,6 @@ class BookwormApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => LibraryProvider()),
         ChangeNotifierProvider(create: (_) => ReaderProvider()),
-        ChangeNotifierProvider(create: (_) => AdminProvider()),
       ],
       child: MaterialApp(
         title: 'bookworm',

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bookworm/main.dart';
 import 'package:bookworm/screens/auth/login_screen.dart';
@@ -17,7 +18,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 3000));
       await tester.pumpAndSettle();
 
-      // Verify LoginScreen is loaded with Reader and Admin login options
+      // Verify LoginScreen is loaded with reader login options
       expect(find.byType(LoginScreen), findsOneWidget);
       expect(
         find.text('Sign in to your intellectual sanctuary'),
@@ -49,19 +50,30 @@ void main() {
     expect(find.text('CREATE READER ACCOUNT'), findsOneWidget);
   });
 
-  testWidgets('Role Switcher selects Admin and updates submit button', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(const BookwormApp());
-    await tester.pump(const Duration(milliseconds: 3000));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Auto-Fill Demo Credentials fills email and password fields',
+    (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1200, 1000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
-    // Select Admin tab
-    await tester.tap(find.text('Admin'));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(const BookwormApp());
+      await tester.pump(const Duration(milliseconds: 3000));
+      await tester.pumpAndSettle();
 
-    expect(find.text('SIGN IN AS ADMINISTRATOR'), findsOneWidget);
-  });
+      // Find Auto-Fill button and tap
+      final autoFillFinder = find.text('Auto-Fill Demo Credentials');
+      expect(autoFillFinder, findsOneWidget);
+
+      await tester.ensureVisible(autoFillFinder);
+      await tester.tap(autoFillFinder);
+      await tester.pumpAndSettle();
+
+      // Verify email was set in the text field controller
+      expect(find.text('reader@test.app'), findsWidgets);
+    },
+  );
 
   testWidgets('Direct entry to MainShell renders desktop & mobile elements', (
     WidgetTester tester,

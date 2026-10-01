@@ -4,7 +4,6 @@ import '../../providers/auth_provider.dart';
 import '../../providers/library_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_typography.dart';
-import '../admin/admin_shell.dart';
 import '../main_shell.dart';
 import '../onboarding/onboarding_screen.dart';
 
@@ -34,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _rememberMe = true;
-  int _selectedRoleIndex = 0; // 0: Reader, 1: Administrator
 
   @override
   void dispose() {
@@ -53,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final libraryProvider = context.read<LibraryProvider>();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    final role = _selectedRoleIndex == 1 ? 'admin' : 'reader';
 
     bool success = false;
     if (_isSignUpMode) {
@@ -61,10 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       success = await authProvider.signUp(
         email: email,
         password: password,
-        name: name.isNotEmpty
-            ? name
-            : (_selectedRoleIndex == 1 ? 'Administrator' : 'Reader'),
-        role: role,
+        name: name.isNotEmpty ? name : 'Reader',
       );
     } else {
       success = await authProvider.signIn(email: email, password: password);
@@ -80,43 +74,28 @@ class _LoginScreenState extends State<LoginScreen> {
               ? _nameController.text.trim()
               : email.split('@').first);
 
-      if (role == 'admin' || authProvider.isAdmin) {
-        libraryProvider.loginAsAdmin();
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                const AdminShell(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) =>
-                    FadeTransition(opacity: animation, child: child),
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
-      } else {
-        libraryProvider.loginAsReader(
-          name: userName.isNotEmpty ? userName : 'Reader',
-          isFirstTimeSignUp: _isSignUpMode,
-        );
+      libraryProvider.loginAsReader(
+        name: userName.isNotEmpty ? userName : 'Reader',
+        isFirstTimeSignUp: _isSignUpMode,
+      );
 
-        // Only show the onboarding screen if and only if they created an account.
-        // Existing readers signing in are directed straight to their sanctuary.
-        final destination = _isSignUpMode
-            ? const OnboardingScreen()
-            : const MainShell();
+      // Only show the onboarding screen if and only if they created an account.
+      // Existing readers signing in are directed straight to their sanctuary.
+      final destination = _isSignUpMode
+          ? const OnboardingScreen()
+          : const MainShell();
 
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                destination,
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) =>
-                    FadeTransition(opacity: animation, child: child),
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
-        );
-      }
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              destination,
+          transitionsBuilder:
+              (context, animation, secondaryAnimation, child) =>
+                  FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 500),
+        ),
+      );
     } else {
       // Show error snackbar
       if (authProvider.errorMessage != null) {
@@ -227,23 +206,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _fillDemoReader() {
+  void _fillDemoAccount() {
     setState(() {
-      _selectedRoleIndex = 0;
-      _nameController.text = 'eagle';
+      _nameController.text = 'Eagle';
       _emailController.text = 'reader@test.app';
       _passwordController.text = 'sanctuary2026';
       _confirmPasswordController.text = 'sanctuary2026';
-    });
-  }
-
-  void _fillDemoAdmin() {
-    setState(() {
-      _selectedRoleIndex = 1;
-      _nameController.text = 'Chief Curator';
-      _emailController.text = 'admin@test.app';
-      _passwordController.text = 'archival2026';
-      _confirmPasswordController.text = 'archival2026';
     });
   }
 
@@ -400,112 +368,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 18),
-
-                    // Role Selector Segment (Reader vs Administrator)
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: AppColors.borderLight),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () =>
-                                  setState(() => _selectedRoleIndex = 0),
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 9,
-                                ),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: _selectedRoleIndex == 0
-                                      ? AppColors.surfaceContainerLow
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: _selectedRoleIndex == 0
-                                      ? Border.all(
-                                          color: AppColors.primaryAmber,
-                                        )
-                                      : null,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.person_rounded,
-                                      size: 16,
-                                      color: _selectedRoleIndex == 0
-                                          ? AppColors.primaryAmber
-                                          : AppColors.textSecondary,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      'Reader',
-                                      style: AppTypography.labelSmall(
-                                        color: _selectedRoleIndex == 0
-                                            ? AppColors.secondaryIndigo
-                                            : AppColors.textSecondary,
-                                      ).copyWith(fontWeight: FontWeight.w700),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () =>
-                                  setState(() => _selectedRoleIndex = 1),
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 9,
-                                ),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: _selectedRoleIndex == 1
-                                      ? AppColors.surfaceContainerLow
-                                      : Colors.transparent,
-                                  border: _selectedRoleIndex == 1
-                                      ? Border.all(
-                                          color: AppColors.primaryAmber,
-                                        )
-                                      : null,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.admin_panel_settings_rounded,
-                                      size: 16,
-                                      color: _selectedRoleIndex == 1
-                                          ? AppColors.primaryAmber
-                                          : AppColors.textSecondary,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      'Admin',
-                                      style: AppTypography.labelSmall(
-                                        color: _selectedRoleIndex == 1
-                                            ? AppColors.secondaryIndigo
-                                            : AppColors.textSecondary,
-                                      ).copyWith(fontWeight: FontWeight.w700),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 20),
 
                     // Main Auth Card
                     Container(
@@ -814,9 +677,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? null
                                   : _handleAuthSubmit,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: _selectedRoleIndex == 1
-                                    ? AppColors.secondaryIndigo
-                                    : AppColors.primaryAmber,
+                                backgroundColor: AppColors.primaryAmber,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 14,
@@ -837,12 +698,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     )
                                   : Text(
                                       _isSignUpMode
-                                          ? (_selectedRoleIndex == 1
-                                                ? 'CREATE ADMIN ACCOUNT'
-                                                : 'CREATE READER ACCOUNT')
-                                          : (_selectedRoleIndex == 1
-                                                ? 'SIGN IN AS ADMINISTRATOR'
-                                                : 'SIGN IN AS READER'),
+                                          ? 'CREATE READER ACCOUNT'
+                                          : 'ENTER SANCTUARY',
                                       style:
                                           AppTypography.labelLarge(
                                             color: Colors.white,
@@ -891,54 +748,28 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: _fillDemoReader,
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                    ),
-                                    side: const BorderSide(
-                                      color: AppColors.borderLight,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Fill Reader',
-                                    style: AppTypography.labelSmall(
-                                      color: AppColors.secondaryIndigo,
-                                    ).copyWith(fontWeight: FontWeight.w600),
-                                  ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: _fillDemoAccount,
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                side: const BorderSide(
+                                  color: AppColors.borderLight,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: _fillDemoAdmin,
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                    ),
-                                    side: const BorderSide(
-                                      color: AppColors.borderLight,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Fill Admin',
-                                    style: AppTypography.labelSmall(
-                                      color: AppColors.primaryAmber,
-                                    ).copyWith(fontWeight: FontWeight.w600),
-                                  ),
-                                ),
+                              child: Text(
+                                'Auto-Fill Demo Credentials',
+                                style: AppTypography.labelSmall(
+                                  color: AppColors.secondaryIndigo,
+                                ).copyWith(fontWeight: FontWeight.w600),
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),

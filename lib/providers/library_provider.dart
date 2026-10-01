@@ -15,7 +15,6 @@ class LibraryProvider extends ChangeNotifier {
   List<String> _favoriteGenres = ['Technology', 'Philosophy'];
   bool _isOnboardingCompleted = false;
   bool _isLoggedIn = false;
-  String _userRole = 'reader'; // 'reader' or 'admin'
 
   List<Book> get allBooks => _books;
   ReadingGoal get goal => _goal;
@@ -26,7 +25,6 @@ class LibraryProvider extends ChangeNotifier {
   List<String> get favoriteGenres => _favoriteGenres;
   bool get isOnboardingCompleted => _isOnboardingCompleted;
   bool get isLoggedIn => _isLoggedIn;
-  String get userRole => _userRole;
 
   void loginAsReader({String? name, bool isFirstTimeSignUp = false}) {
     if (name != null && name.trim().isNotEmpty) {
@@ -35,7 +33,6 @@ class LibraryProvider extends ChangeNotifier {
       _userName = 'Reader';
     }
     _isLoggedIn = true;
-    _userRole = 'reader';
     _isOnboardingCompleted = !isFirstTimeSignUp;
     notifyListeners();
   }
@@ -45,17 +42,8 @@ class LibraryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loginAsAdmin() {
-    _isLoggedIn = true;
-    _userRole = 'admin';
-    _userName = 'Administrator';
-    _userTitle = 'Chief Archival Curator';
-    notifyListeners();
-  }
-
   void signOut() {
     _isLoggedIn = false;
-    _userRole = 'reader';
     notifyListeners();
   }
 

@@ -9,7 +9,7 @@ class AuthProvider extends ChangeNotifier {
   Map<String, dynamic>? _userProfile;
   bool _isLoading = false;
   String? _errorMessage;
-  String _userRole = 'reader'; // 'reader' or 'admin'
+  String _userRole = 'reader';
   StreamSubscription<User?>? _authSubscription;
 
   // Local fallback storage for offline / unconfigured Firebase keys
@@ -23,12 +23,6 @@ class AuthProvider extends ChangeNotifier {
       'role': 'reader',
       'title': 'Avid Reader & Scholar',
     },
-    'admin@test.app': {
-      'password': 'archival2026',
-      'name': 'Administrator',
-      'role': 'admin',
-      'title': 'Chief Archival Curator',
-    },
   };
 
   AuthProvider() {
@@ -40,7 +34,6 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String get userRole => _userRole;
-  bool get isAdmin => _userRole == 'admin';
 
   String get displayName {
     if (_user?.displayName != null && _user!.displayName!.isNotEmpty) {
@@ -62,8 +55,7 @@ class AuthProvider extends ChangeNotifier {
   String get email => _user?.email ?? _localEmail;
   String? get photoUrl => _user?.photoURL ?? _userProfile?['avatarUrl'];
   String get userTitle =>
-      _userProfile?['title'] ??
-      (isAdmin ? 'Chief Archival Curator' : 'Avid Reader');
+      _userProfile?['title'] ?? 'Avid Reader & Scholar';
 
   void _initAuth() {
     _loadPersistedSession();
@@ -101,8 +93,7 @@ class AuthProvider extends ChangeNotifier {
           'name': _localDisplayName,
           'email': _localEmail,
           'role': _userRole,
-          'title': prefs.getString('auth_title') ??
-              (_userRole == 'admin' ? 'Chief Archival Curator' : 'Avid Reader'),
+          'title': prefs.getString('auth_title') ?? 'Avid Reader & Scholar',
         };
         notifyListeners();
       }
@@ -282,32 +273,24 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String password,
     required String name,
-    required String role,
+    String role = 'reader',
   }) {
     final cleanEmail = email.trim().toLowerCase();
     _localAccounts[cleanEmail] = {
       'password': password,
-      'name': name.trim().isNotEmpty
-          ? name.trim()
-          : (role == 'admin' ? 'Administrator' : 'Reader'),
-      'role': role,
-      'title': role == 'admin'
-          ? 'Chief Archival Curator'
-          : 'Avid Reader & Scholar',
+      'name': name.trim().isNotEmpty ? name.trim() : 'Reader',
+      'role': 'reader',
+      'title': 'Avid Reader & Scholar',
     };
-    _localDisplayName = name.trim().isNotEmpty
-        ? name.trim()
-        : (role == 'admin' ? 'Administrator' : 'Reader');
+    _localDisplayName = name.trim().isNotEmpty ? name.trim() : 'Reader';
     _localEmail = cleanEmail;
-    _userRole = role;
+    _userRole = 'reader';
     _isLocalAuthenticated = true;
     _userProfile = {
       'name': _localDisplayName,
       'email': _localEmail,
-      'role': _userRole,
-      'title': role == 'admin'
-          ? 'Chief Archival Curator'
-          : 'Avid Reader & Scholar',
+      'role': 'reader',
+      'title': 'Avid Reader & Scholar',
     };
   }
 
@@ -318,17 +301,13 @@ class AuthProvider extends ChangeNotifier {
       if (account['password'] == password || password.isNotEmpty) {
         _localDisplayName = account['name'] ?? 'Reader';
         _localEmail = cleanEmail;
-        _userRole = account['role'] ?? 'reader';
+        _userRole = 'reader';
         _isLocalAuthenticated = true;
         _userProfile = {
           'name': _localDisplayName,
           'email': _localEmail,
-          'role': _userRole,
-          'title':
-              account['title'] ??
-              (account['role'] == 'admin'
-                  ? 'Chief Archival Curator'
-                  : 'Avid Reader'),
+          'role': 'reader',
+          'title': account['title'] ?? 'Avid Reader & Scholar',
         };
         return true;
       }

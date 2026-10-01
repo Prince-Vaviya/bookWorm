@@ -28,12 +28,12 @@ class FirebaseService {
   // AUTHENTICATION SERVICES
   // ==========================================
 
-  /// Register a new reader or admin user with Firebase Auth
+  /// Register a new reader user with Firebase Auth
   static Future<UserCredential> signUpWithEmailPassword({
     required String email,
     required String password,
     required String name,
-    String role = 'reader', // 'reader' or 'admin'
+    String role = 'reader',
   }) async {
     try {
       final credential = await auth.createUserWithEmailAndPassword(
@@ -53,8 +53,8 @@ class FirebaseService {
             'uid': user.uid,
             'name': name.trim(),
             'email': email.trim().toLowerCase(),
-            'role': role,
-            'title': role == 'admin' ? 'Chief Archival Curator' : 'Avid Reader',
+            'role': 'reader',
+            'title': 'Avid Reader',
             'createdAt': FieldValue.serverTimestamp(),
             'favoriteGenres': ['Technology', 'Philosophy'],
             'dailyTargetMinutes': 25,

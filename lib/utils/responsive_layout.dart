@@ -76,7 +76,6 @@ class ResponsiveContainer extends StatelessWidget {
 class DesktopSidebarNav extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTabSelected;
-  final VoidCallback? onSwitchToAdmin;
   final VoidCallback? onSignOut;
   final String userName;
   final String? userAvatarUrl;
@@ -86,7 +85,6 @@ class DesktopSidebarNav extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTabSelected,
-    this.onSwitchToAdmin,
     this.onSignOut,
     required this.userName,
     this.userAvatarUrl,
@@ -241,40 +239,11 @@ class DesktopSidebarNav extends StatelessWidget {
               ),
             ),
 
-            // Bottom Actions (Admin Portal Switch & Sign Out)
+            // Bottom Actions (Sign Out)
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  if (onSwitchToAdmin != null)
-                    InkWell(
-                      onTap: onSwitchToAdmin,
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondaryIndigo,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.admin_panel_settings_rounded,
-                              size: 16,
-                              color: AppColors.primaryLightAmber,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Admin Portal',
-                              style: AppTypography.labelSmall(color: Colors.white)
-                                  .copyWith(fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 10),
                   if (onSignOut != null)
                     InkWell(
                       onTap: onSignOut,
