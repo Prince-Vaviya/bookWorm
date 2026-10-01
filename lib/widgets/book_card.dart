@@ -299,8 +299,7 @@ class BookCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -319,8 +318,8 @@ class BookCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: SizedBox(
-                width: 65,
-                height: 95,
+                width: 60,
+                height: 86,
                 child: Image.network(
                   book.coverUrl,
                   fit: BoxFit.cover,
@@ -331,11 +330,13 @@ class BookCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             // Info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     children: [
@@ -350,20 +351,20 @@ class BookCard extends StatelessWidget {
                           book.genre,
                           style: AppTypography.labelSmall(
                             color: AppColors.secondaryLightIndigo,
-                          ),
+                          ).copyWith(fontSize: 10),
                         ),
                       ),
                       const Spacer(),
-                      RatingStars(rating: book.rating, iconSize: 13),
+                      RatingStars(rating: book.rating, iconSize: 12),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     book.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypography.titleMedium().copyWith(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -372,9 +373,10 @@ class BookCard extends StatelessWidget {
                     book.author,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTypography.bodySmall(color: AppColors.textSecondary),
+                    style: AppTypography.bodySmall(color: AppColors.textSecondary)
+                        .copyWith(fontSize: 11.5),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   if (book.shelfStatus == ShelfStatus.currentlyReading) ...[
                     Row(
                       children: [
@@ -389,14 +391,15 @@ class BookCard extends StatelessWidget {
                           '${(book.progressPercentage * 100).toInt()}%',
                           style: AppTypography.labelSmall(
                             color: AppColors.primaryAmber,
-                          ).copyWith(fontWeight: FontWeight.w700),
+                          ).copyWith(fontWeight: FontWeight.w700, fontSize: 10.5),
                         ),
                       ],
                     ),
                   ] else ...[
                     Text(
                       '${book.totalPages} pages • ${book.publishedYear}',
-                      style: AppTypography.labelSmall(color: AppColors.textMuted),
+                      style: AppTypography.labelSmall(color: AppColors.textMuted)
+                          .copyWith(fontSize: 10.5),
                     ),
                   ],
                 ],

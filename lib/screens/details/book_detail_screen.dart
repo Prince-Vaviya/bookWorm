@@ -69,11 +69,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
           // Content
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   // Hero 3D Book Cover & Key Metrics
                   Center(
                     child: Hero(
@@ -325,12 +328,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               ),
             ),
           ),
-        ],
+        ),
       ),
+    ],
+  ),
 
       // Sticky Bottom Action Bar
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
           color: Colors.white,
           border: const Border(top: BorderSide(color: AppColors.borderLight)),
@@ -343,9 +348,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           ],
         ),
         child: SafeArea(
-          child: Row(
-            children: [
-              Expanded(
+          top: false,
+          child: Align(
+            alignment: Alignment.center,
+            heightFactor: 1.0,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 900),
+              child: SizedBox(
+                width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -362,11 +372,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryAmber,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

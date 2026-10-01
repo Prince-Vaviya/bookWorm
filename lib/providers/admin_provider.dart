@@ -38,7 +38,8 @@ class AdminProvider extends ChangeNotifier {
       reviewerName: 'David K.',
       reviewerEmail: 'david.k@spamlink.org',
       rating: 1.0,
-      comment: 'Visit freebookdownloads.click for free coupon codes and pirated pdf copies now!',
+      comment:
+          'Visit freebookdownloads.click for free coupon codes and pirated pdf copies now!',
       submittedDate: '3 hours ago',
       status: ModerationStatus.flagged,
       flagReason: 'Automated Spam / Promotional Link Detected',
@@ -49,7 +50,7 @@ class AdminProvider extends ChangeNotifier {
     AdminUserRecord(
       id: 'usr-1',
       name: 'Rajneesh',
-      email: 'rajneesh@booknest.app',
+      email: 'rajneesh@bookworm.app',
       avatarUrl:
           'https://lh3.googleusercontent.com/aida/AEtjO1U3lH30DCsHONA62BPFpjqz_q4AcW8vj0wVGB8oL5vQf8l1yX-2EQh2OBbn9UrAffvTV5BURf-aMlOdyTdmNhXUp0y427UUaWf--NljvZ8dxNpGQKjnV-KRiO8Vqpo70mTYnRKPpmMQOlwVfdf2IJD07ywpsa-K220psyrZzkSSadOohzr1PD4VtOeKVOfL3H1G974-S93HgsBYSW-76GfIrCRUqw0KrEDCjSq3qu9zcdwM8Gav1IAW26sw',
       role: UserRole.admin,
@@ -62,7 +63,8 @@ class AdminProvider extends ChangeNotifier {
       id: 'usr-2',
       name: 'Elena Rostova',
       email: 'elena.rostova@literature.edu',
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop',
+      avatarUrl:
+          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop',
       role: UserRole.curator,
       joinedDate: 'Mar 2024',
       booksRead: 29,
@@ -73,7 +75,8 @@ class AdminProvider extends ChangeNotifier {
       id: 'usr-3',
       name: 'Michael Chang',
       email: 'm.chang@techdigest.io',
-      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop',
+      avatarUrl:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop',
       role: UserRole.reader,
       joinedDate: 'Jun 2024',
       booksRead: 11,
@@ -84,7 +87,8 @@ class AdminProvider extends ChangeNotifier {
       id: 'usr-4',
       name: 'Amina Al-Sayed',
       email: 'amina.reads@sanctuary.com',
-      avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop',
+      avatarUrl:
+          'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop',
       role: UserRole.curator,
       joinedDate: 'Aug 2024',
       booksRead: 35,
@@ -97,7 +101,8 @@ class AdminProvider extends ChangeNotifier {
     AdminActivityLog(
       id: 'act-1',
       title: 'New Book Published',
-      description: '"Designing Data-Intensive Applications" catalog version updated.',
+      description:
+          '"Designing Data-Intensive Applications" catalog version updated.',
       timestamp: '15m ago',
       iconType: 'book',
     ),
@@ -122,10 +127,12 @@ class AdminProvider extends ChangeNotifier {
   List<AdminUserRecord> get usersDirectory => _usersDirectory;
   List<AdminActivityLog> get activityLogs => _activityLogs;
 
-  int get pendingReviewsCount =>
-      _moderationQueue.where((r) => r.status == ModerationStatus.pending).length;
-  int get flaggedReviewsCount =>
-      _moderationQueue.where((r) => r.status == ModerationStatus.flagged).length;
+  int get pendingReviewsCount => _moderationQueue
+      .where((r) => r.status == ModerationStatus.pending)
+      .length;
+  int get flaggedReviewsCount => _moderationQueue
+      .where((r) => r.status == ModerationStatus.flagged)
+      .length;
 
   PublicationStatus getBookPublicationStatus(String bookId) {
     return _bookPublicationStatuses[bookId] ?? PublicationStatus.published;
@@ -163,7 +170,8 @@ class AdminProvider extends ChangeNotifier {
         AdminActivityLog(
           id: 'act-${DateTime.now().millisecondsSinceEpoch}',
           title: 'Review Approved',
-          description: 'Review by ${modReview.reviewerName} approved for "${modReview.bookTitle}".',
+          description:
+              'Review by ${modReview.reviewerName} approved for "${modReview.bookTitle}".',
           timestamp: 'Just now',
           iconType: 'review',
         ),

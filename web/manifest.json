@@ -1,6 +1,6 @@
 {
-    "name": "booknest",
-    "short_name": "booknest",
+    "name": "bookworm",
+    "short_name": "bookworm",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

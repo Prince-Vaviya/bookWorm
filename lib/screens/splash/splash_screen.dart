@@ -61,15 +61,13 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _logoController,
-        curve: const Interval(0.4, 0.9, curve: Curves.easeOutCubic),
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _logoController,
+            curve: const Interval(0.4, 0.9, curve: Curves.easeOutCubic),
+          ),
+        );
 
     _logoController.forward();
 
@@ -94,10 +92,12 @@ class _SplashScreenState extends State<SplashScreen>
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => destination,
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                destination,
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
             transitionDuration: const Duration(milliseconds: 600),
           ),
         );
@@ -163,7 +163,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     );
                   },
-                  child: _buildBookNestLogo(),
+                  child: _buildbookwormLogo(),
                 ),
                 const SizedBox(height: 32),
 
@@ -186,35 +186,38 @@ class _SplashScreenState extends State<SplashScreen>
                         children: [
                           Text(
                             'Book',
-                            style: AppTypography.displayLarge(
-                              color: AppColors.secondaryIndigo,
-                            ).copyWith(
-                              fontSize: 38,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -1.0,
-                            ),
+                            style:
+                                AppTypography.displayLarge(
+                                  color: AppColors.secondaryIndigo,
+                                ).copyWith(
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -1.0,
+                                ),
                           ),
                           Text(
-                            'Nest',
-                            style: AppTypography.displayLarge(
-                              color: AppColors.primaryAmber,
-                            ).copyWith(
-                              fontSize: 38,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -1.0,
-                            ),
+                            'Worm',
+                            style:
+                                AppTypography.displayLarge(
+                                  color: AppColors.primaryAmber,
+                                ).copyWith(
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -1.0,
+                                ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
                       Text(
                         'YOUR INTELLECTUAL SANCTUARY',
-                        style: AppTypography.labelSmall(
-                          color: AppColors.secondaryLightIndigo,
-                        ).copyWith(
-                          letterSpacing: 2.2,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style:
+                            AppTypography.labelSmall(
+                              color: AppColors.secondaryLightIndigo,
+                            ).copyWith(
+                              letterSpacing: 2.2,
+                              fontWeight: FontWeight.w700,
+                            ),
                       ),
                     ],
                   ),
@@ -231,10 +234,7 @@ class _SplashScreenState extends State<SplashScreen>
             child: AnimatedBuilder(
               animation: _logoController,
               builder: (context, child) {
-                return Opacity(
-                  opacity: _textFadeAnimation.value,
-                  child: child,
-                );
+                return Opacity(opacity: _textFadeAnimation.value, child: child);
               },
               child: Column(
                 children: [
@@ -264,7 +264,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget _buildBookNestLogo() {
+  Widget _buildbookwormLogo() {
     return Container(
       width: 110,
       height: 110,
@@ -306,11 +306,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
 
           // Central Open Book Icon
-          const Icon(
-            Icons.menu_book_rounded,
-            size: 50,
-            color: Colors.white,
-          ),
+          const Icon(Icons.menu_book_rounded, size: 50, color: Colors.white),
 
           // Bookmark Ribbon Accent
           Positioned(

@@ -50,8 +50,11 @@ class _AdminBooksScreenState extends State<AdminBooksScreen> {
     return Scaffold(
       backgroundColor: AppColors.canvasPaper,
       body: SafeArea(
-        child: Column(
-          children: [
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1100),
+            child: Column(
+              children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Column(
@@ -194,7 +197,9 @@ class _AdminBooksScreenState extends State<AdminBooksScreen> {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   Widget _buildAdminBookCard(

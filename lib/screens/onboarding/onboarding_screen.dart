@@ -17,8 +17,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   late final TextEditingController _nameController;
-  final TextEditingController _titleController =
-      TextEditingController(text: 'Curator & Software Architect');
+  final TextEditingController _titleController = TextEditingController(
+    text: 'Curator & Software Architect',
+  );
 
   int _selectedDailyMinutes = 45;
   final List<String> _selectedGenres = ['Technology', 'Philosophy'];
@@ -40,7 +41,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.initState();
     final existingName = context.read<LibraryProvider>().userName;
     _nameController = TextEditingController(
-      text: (existingName.isNotEmpty && existingName != 'Reader') ? existingName : '',
+      text: (existingName.isNotEmpty && existingName != 'Reader')
+          ? existingName
+          : '',
     );
   }
 
@@ -64,7 +67,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const MainShell(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const MainShell(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 600),
@@ -98,8 +102,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   if (_currentPage > 0)
                     IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: AppColors.secondaryIndigo, size: 20),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        color: AppColors.secondaryIndigo,
+                        size: 20,
+                      ),
                       onPressed: () {
                         _pageController.previousPage(
                           duration: const Duration(milliseconds: 300),
@@ -118,7 +125,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         width: isCurrent ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: isCurrent ? AppColors.primaryAmber : AppColors.borderLight,
+                          color: isCurrent
+                              ? AppColors.primaryAmber
+                              : AppColors.borderLight,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       );
@@ -128,7 +137,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onPressed: _finishOnboarding,
                     child: Text(
                       'Skip',
-                      style: AppTypography.labelMedium(color: AppColors.textMuted),
+                      style: AppTypography.labelMedium(
+                        color: AppColors.textMuted,
+                      ),
                     ),
                   ),
                 ],
@@ -168,8 +179,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   child: Text(
                     _currentPage == 2 ? 'ENTER YOUR SANCTUARY' : 'CONTINUE',
-                    style: AppTypography.labelLarge(color: Colors.white)
-                        .copyWith(letterSpacing: 1.0, fontWeight: FontWeight.w700),
+                    style: AppTypography.labelLarge(
+                      color: Colors.white,
+                    ).copyWith(letterSpacing: 1.0, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
@@ -215,20 +227,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: [
               Text(
                 'Book',
-                style: AppTypography.displayLarge(color: AppColors.secondaryIndigo)
-                    .copyWith(fontSize: 34),
+                style: AppTypography.displayLarge(
+                  color: AppColors.secondaryIndigo,
+                ).copyWith(fontSize: 34),
               ),
               Text(
-                'Nest',
-                style: AppTypography.displayLarge(color: AppColors.primaryAmber)
-                    .copyWith(fontSize: 34),
+                'Worm',
+                style: AppTypography.displayLarge(
+                  color: AppColors.primaryAmber,
+                ).copyWith(fontSize: 34),
               ),
             ],
           ),
           const SizedBox(height: 6),
           Text(
             'Your Intellectual Sanctuary',
-            style: AppTypography.titleMedium(color: AppColors.secondaryLightIndigo),
+            style: AppTypography.titleMedium(
+              color: AppColors.secondaryLightIndigo,
+            ),
           ),
           const SizedBox(height: 18),
           Text(
@@ -238,11 +254,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: 28),
           // Value Props
-          _buildValueProp(Icons.auto_stories_rounded, 'Distraction-Free E-Reader & Themes'),
+          _buildValueProp(
+            Icons.auto_stories_rounded,
+            'Distraction-Free E-Reader & Themes',
+          ),
           const SizedBox(height: 12),
-          _buildValueProp(Icons.local_fire_department_rounded, 'Streak Tracking & Reading Goals'),
+          _buildValueProp(
+            Icons.local_fire_department_rounded,
+            'Streak Tracking & Reading Goals',
+          ),
           const SizedBox(height: 12),
-          _buildValueProp(Icons.collections_bookmark_rounded, 'Personal Shelves & Curated Catalog'),
+          _buildValueProp(
+            Icons.collections_bookmark_rounded,
+            'Personal Shelves & Curated Catalog',
+          ),
           const SizedBox(height: 12),
         ],
       ),
@@ -259,7 +284,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 10),
             Text(
               'Reader Identity',
-              style: AppTypography.displayMedium(color: AppColors.secondaryIndigo),
+              style: AppTypography.displayMedium(
+                color: AppColors.secondaryIndigo,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
@@ -275,9 +302,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     radius: 44,
                     backgroundColor: AppColors.primaryLightAmber,
                     child: Text(
-                      _nameController.text.isNotEmpty ? _nameController.text[0].toUpperCase() : 'R',
-                      style: AppTypography.displayMedium(color: AppColors.primaryDarkAmber)
-                          .copyWith(fontSize: 36),
+                      _nameController.text.isNotEmpty
+                          ? _nameController.text[0].toUpperCase()
+                          : 'R',
+                      style: AppTypography.displayMedium(
+                        color: AppColors.primaryDarkAmber,
+                      ).copyWith(fontSize: 36),
                     ),
                   ),
                   Positioned(
@@ -289,7 +319,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         color: AppColors.primaryAmber,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.edit, size: 14, color: Colors.white),
+                      child: const Icon(
+                        Icons.edit,
+                        size: 14,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -299,8 +333,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // Name Field
             Text(
               'YOUR NAME',
-              style: AppTypography.labelSmall(color: AppColors.secondaryIndigo)
-                  .copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
+              style: AppTypography.labelSmall(
+                color: AppColors.secondaryIndigo,
+              ).copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -309,10 +344,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               decoration: InputDecoration(
                 hintText: 'e.g. Elena, Alex, Marcus',
                 hintStyle: AppTypography.bodyMedium(color: AppColors.textMuted),
-                prefixIcon: const Icon(Icons.person_outline_rounded, color: AppColors.primaryAmber),
+                prefixIcon: const Icon(
+                  Icons.person_outline_rounded,
+                  color: AppColors.primaryAmber,
+                ),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: const BorderSide(color: AppColors.borderLight),
@@ -323,7 +364,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(color: AppColors.primaryAmber, width: 1.5),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryAmber,
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -331,8 +375,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // Reader Title Field
             Text(
               'YOUR READER TITLE / INTENTION',
-              style: AppTypography.labelSmall(color: AppColors.secondaryIndigo)
-                  .copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
+              style: AppTypography.labelSmall(
+                color: AppColors.secondaryIndigo,
+              ).copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -340,10 +385,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               decoration: InputDecoration(
                 hintText: 'e.g. Lifelong Learner, Software Architect',
                 hintStyle: AppTypography.bodyMedium(color: AppColors.textMuted),
-                prefixIcon: const Icon(Icons.bookmark_outline_rounded, color: AppColors.primaryAmber),
+                prefixIcon: const Icon(
+                  Icons.bookmark_outline_rounded,
+                  color: AppColors.primaryAmber,
+                ),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: const BorderSide(color: AppColors.borderLight),
@@ -354,7 +405,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(color: AppColors.primaryAmber, width: 1.5),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryAmber,
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -374,7 +428,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 10),
             Text(
               'Reading Intentions',
-              style: AppTypography.displayMedium(color: AppColors.secondaryIndigo),
+              style: AppTypography.displayMedium(
+                color: AppColors.secondaryIndigo,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
@@ -385,8 +441,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // Daily Target Minutes
             Text(
               'DAILY READING TARGET',
-              style: AppTypography.labelSmall(color: AppColors.secondaryIndigo)
-                  .copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
+              style: AppTypography.labelSmall(
+                color: AppColors.secondaryIndigo,
+              ).copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 10),
             Row(
@@ -406,10 +463,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.secondaryIndigo : Colors.white,
+                          color: isSelected
+                              ? AppColors.secondaryIndigo
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: isSelected ? AppColors.secondaryIndigo : AppColors.borderLight,
+                            color: isSelected
+                                ? AppColors.secondaryIndigo
+                                : AppColors.borderLight,
                             width: 1.5,
                           ),
                         ),
@@ -418,13 +479,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Text(
                               '$mins',
                               style: AppTypography.titleMedium(
-                                color: isSelected ? Colors.white : AppColors.secondaryIndigo,
+                                color: isSelected
+                                    ? Colors.white
+                                    : AppColors.secondaryIndigo,
                               ).copyWith(fontWeight: FontWeight.w800),
                             ),
                             Text(
                               'mins',
                               style: AppTypography.labelSmall(
-                                color: isSelected ? AppColors.primaryLightAmber : AppColors.textMuted,
+                                color: isSelected
+                                    ? AppColors.primaryLightAmber
+                                    : AppColors.textMuted,
                               ),
                             ),
                           ],
@@ -439,8 +504,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             // Favorite Genres
             Text(
               'FAVORITE TOPICS & GENRES',
-              style: AppTypography.labelSmall(color: AppColors.secondaryIndigo)
-                  .copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
+              style: AppTypography.labelSmall(
+                color: AppColors.secondaryIndigo,
+              ).copyWith(letterSpacing: 1, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 10),
             Wrap(
@@ -462,12 +528,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                   selectedColor: AppColors.secondaryIndigo,
                   backgroundColor: Colors.white,
-                  labelStyle: AppTypography.labelSmall(
-                    color: isSelected ? Colors.white : AppColors.secondaryIndigo,
-                  ).copyWith(fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500),
+                  labelStyle:
+                      AppTypography.labelSmall(
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.secondaryIndigo,
+                      ).copyWith(
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
                   shape: const StadiumBorder(),
                   side: BorderSide(
-                    color: isSelected ? AppColors.secondaryIndigo : AppColors.borderLight,
+                    color: isSelected
+                        ? AppColors.secondaryIndigo
+                        : AppColors.borderLight,
                   ),
                 );
               }).toList(),
@@ -490,8 +565,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Expanded(
           child: Text(
             text,
-            style: AppTypography.bodySmall(color: AppColors.secondaryIndigo)
-                .copyWith(fontWeight: FontWeight.w600),
+            style: AppTypography.bodySmall(
+              color: AppColors.secondaryIndigo,
+            ).copyWith(fontWeight: FontWeight.w600),
           ),
         ),
       ],

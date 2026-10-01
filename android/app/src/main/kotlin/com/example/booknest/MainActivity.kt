@@ -1,4 +1,4 @@
-package com.example.booknest
+package com.example.bookworm
 
 import io.flutter.embedding.android.FlutterActivity
 

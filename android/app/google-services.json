@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "940668782958",
+    "firebase_url": "https://bookworm-platform-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "bookworm-platform",
+    "storage_bucket": "bookworm-platform.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940668782958:android:4a5c5c83b093d864fe997f",
+        "android_client_info": {
+          "package_name": "com.example.bookworm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940668782958-b8eok4opcqi434089sqn4546iarovq10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7R456wGJSGgSkMYDtJ-pKmJuWFrW_k64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940668782958-b8eok4opcqi434089sqn4546iarovq10.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "940668782958-kejb8p7e1u9rurf6iim2sps0h6mqa49q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bookworm"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

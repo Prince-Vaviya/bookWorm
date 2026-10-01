@@ -1,4 +1,4 @@
-name: booknest
+name: bookworm
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -37,6 +37,11 @@ dependencies:
   google_fonts: ^6.2.1
   provider: ^6.1.2
   intl: ^0.20.2
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  firebase_storage: ^13.6.0
+  cloud_firestore: ^6.10.0
+  image_picker: ^1.2.3
 
 dev_dependencies:
   flutter_test:

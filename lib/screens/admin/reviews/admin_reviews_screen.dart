@@ -29,73 +29,78 @@ class _AdminReviewsScreenState extends State<AdminReviewsScreen> {
     return Scaffold(
       backgroundColor: AppColors.canvasPaper,
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Review Moderation',
-                    style: AppTypography.displayMedium(color: AppColors.secondaryIndigo),
-                  ),
-                  Text(
-                    'Audit community contributions & maintain editorial standards',
-                    style: AppTypography.bodySmall(color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Segmented Status Filter
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: Row(
-                      children: [
-                        _buildTabButton('Pending (${admin.pendingReviewsCount})', ModerationStatus.pending),
-                        _buildTabButton('Flagged (${admin.flaggedReviewsCount})', ModerationStatus.flagged),
-                        _buildTabButton('Approved', ModerationStatus.approved),
-                        _buildTabButton('Rejected', ModerationStatus.rejected),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Review List
-            Expanded(
-              child: reviews.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.check_circle_outline_rounded, size: 52, color: AppColors.successGreen),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Queue is Clear',
-                            style: AppTypography.titleMedium(color: AppColors.secondaryIndigo),
-                          ),
-                          Text(
-                            'No reviews in the ${_selectedTab.name} queue',
-                            style: AppTypography.bodySmall(color: AppColors.textMuted),
-                          ),
-                        ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1100),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Review Moderation',
+                        style: AppTypography.displayMedium(color: AppColors.secondaryIndigo),
                       ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 80),
-                      itemCount: reviews.length,
-                      itemBuilder: (context, index) {
-                        final item = reviews[index];
-                        return _buildModerationCard(context, item, admin, library);
-                      },
-                    ),
+                      Text(
+                        'Audit community contributions & maintain editorial standards',
+                        style: AppTypography.bodySmall(color: AppColors.textSecondary),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Segmented Status Filter
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceContainerLow,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          children: [
+                            _buildTabButton('Pending (${admin.pendingReviewsCount})', ModerationStatus.pending),
+                            _buildTabButton('Flagged (${admin.flaggedReviewsCount})', ModerationStatus.flagged),
+                            _buildTabButton('Approved', ModerationStatus.approved),
+                            _buildTabButton('Rejected', ModerationStatus.rejected),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Review List
+                Expanded(
+                  child: reviews.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.check_circle_outline_rounded, size: 52, color: AppColors.successGreen),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Queue is Clear',
+                                style: AppTypography.titleMedium(color: AppColors.secondaryIndigo),
+                              ),
+                              Text(
+                                'No reviews in the ${_selectedTab.name} queue',
+                                style: AppTypography.bodySmall(color: AppColors.textMuted),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(20, 8, 20, 80),
+                          itemCount: reviews.length,
+                          itemBuilder: (context, index) {
+                            final item = reviews[index];
+                            return _buildModerationCard(context, item, admin, library);
+                          },
+                        ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

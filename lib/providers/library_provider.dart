@@ -28,7 +28,7 @@ class LibraryProvider extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   String get userRole => _userRole;
 
-  void loginAsReader({String? name}) {
+  void loginAsReader({String? name, bool isFirstTimeSignUp = false}) {
     if (name != null && name.trim().isNotEmpty) {
       _userName = name.trim();
     } else if (_userName.trim().isEmpty) {
@@ -36,6 +36,12 @@ class LibraryProvider extends ChangeNotifier {
     }
     _isLoggedIn = true;
     _userRole = 'reader';
+    _isOnboardingCompleted = !isFirstTimeSignUp;
+    notifyListeners();
+  }
+
+  void markOnboardingCompleted() {
+    _isOnboardingCompleted = true;
     notifyListeners();
   }
 

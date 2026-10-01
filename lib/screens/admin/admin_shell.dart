@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_typography.dart';
+import '../../utils/responsive_layout.dart';
 import 'dashboard/admin_dashboard_screen.dart';
 import 'books/admin_books_screen.dart';
 import 'reviews/admin_reviews_screen.dart';
@@ -24,14 +25,172 @@ class _AdminShellState extends State<AdminShell> {
     });
   }
 
+  void _switchToSanctuary() {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const MainShell()),
+      );
+    }
+  }
+
+  void _signOut() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDesktop = ResponsiveLayout.isDesktop(context);
+
     final screens = [
       AdminDashboardScreen(onNavigateTab: _onTabSelected),
       const AdminBooksScreen(),
       const AdminReviewsScreen(),
       const AdminUsersScreen(),
     ];
+
+    if (isDesktop) {
+      return Scaffold(
+        body: Row(
+          children: [
+            // Admin Desktop Sidebar
+            Container(
+              width: 260,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(right: BorderSide(color: AppColors.borderLight)),
+              ),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Admin Header
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryIndigo,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.admin_panel_settings_rounded,
+                              size: 20,
+                              color: AppColors.primaryLightAmber,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'ADMIN PORTAL',
+                                style: AppTypography.labelMedium(
+                                  color: AppColors.secondaryIndigo,
+                                ).copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.1),
+                              ),
+                              Text(
+                                'Curatorial Suite',
+                                style: AppTypography.labelSmall(
+                                  color: AppColors.textMuted,
+                                ).copyWith(fontSize: 11),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1, color: AppColors.borderLight),
+                    const SizedBox(height: 12),
+
+                    // Navigation items
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        children: [
+                          _buildDesktopNavItem(0, Icons.dashboard_rounded, Icons.dashboard_outlined, 'Dashboard'),
+                          _buildDesktopNavItem(1, Icons.library_books_rounded, Icons.library_books_outlined, 'Book Catalog'),
+                          _buildDesktopNavItem(2, Icons.gavel_rounded, Icons.gavel_outlined, 'Moderation Queue'),
+                          _buildDesktopNavItem(3, Icons.people_alt_rounded, Icons.people_alt_outlined, 'Reader Directory'),
+                        ],
+                      ),
+                    ),
+
+                    // Bottom Action
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: _switchToSanctuary,
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.surfaceContainerLow,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppColors.borderLight),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.auto_stories_rounded, size: 16, color: AppColors.primaryAmber),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Reader Sanctuary',
+                                    style: AppTypography.labelSmall(color: AppColors.secondaryIndigo)
+                                        .copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          InkWell(
+                            onTap: _signOut,
+                            borderRadius: BorderRadius.circular(12),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.logout_rounded, size: 16, color: AppColors.textMuted),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Sign Out',
+                                    style: AppTypography.labelSmall(color: AppColors.textMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Content Area
+            Expanded(
+              child: IndexedStack(
+                index: _currentTabIndex,
+                children: screens,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -63,16 +222,7 @@ class _AdminShellState extends State<AdminShell> {
         actions: [
           // Switch to Reader Sanctuary
           TextButton.icon(
-            onPressed: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const MainShell()),
-                );
-              }
-            },
+            onPressed: _switchToSanctuary,
             icon: const Icon(Icons.auto_stories_rounded, size: 16, color: AppColors.primaryAmber),
             label: Text(
               'Reader Sanctuary',
@@ -83,13 +233,7 @@ class _AdminShellState extends State<AdminShell> {
           IconButton(
             icon: const Icon(Icons.logout_rounded, size: 18, color: AppColors.textMuted),
             tooltip: 'Sign Out to Login',
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false,
-              );
-            },
+            onPressed: _signOut,
           ),
           const SizedBox(width: 4),
         ],
@@ -127,6 +271,40 @@ class _AdminShellState extends State<AdminShell> {
                 _buildNavItem(3, Icons.people_alt_rounded, Icons.people_alt_outlined, 'Users'),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopNavItem(int index, IconData activeIcon, IconData inactiveIcon, String label) {
+    final isSelected = _currentTabIndex == index;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      child: InkWell(
+        onTap: () => _onTabSelected(index),
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.secondaryIndigo : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                isSelected ? activeIcon : inactiveIcon,
+                size: 20,
+                color: isSelected ? AppColors.primaryLightAmber : AppColors.textSecondary,
+              ),
+              const SizedBox(width: 14),
+              Text(
+                label,
+                style: AppTypography.labelMedium(
+                  color: isSelected ? Colors.white : AppColors.secondaryIndigo,
+                ).copyWith(fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500),
+              ),
+            ],
           ),
         ),
       ),
