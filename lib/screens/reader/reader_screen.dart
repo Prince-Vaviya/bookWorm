@@ -450,140 +450,143 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(2),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 18),
-                  Text(
-                    'Reading Experience',
-                    style: AppTypography.headlineSmall(
-                      color: isDark ? Colors.white : AppColors.secondaryIndigo,
+                    const SizedBox(height: 18),
+                    Text(
+                      'Reading Experience',
+                      style: AppTypography.headlineSmall(
+                        color: isDark ? Colors.white : AppColors.secondaryIndigo,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                  // Themes row
-                  Text(
-                    'PAPER THEME',
-                    style: AppTypography.labelSmall(
-                      color: isDark ? Colors.white70 : AppColors.textMuted,
-                    ).copyWith(letterSpacing: 1),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildThemeCircle(
-                        'Cream',
-                        AppColors.readerCreamBg,
-                        settings.themeMode == ReaderThemeMode.creamPaper,
-                        () => reader.setThemeMode(ReaderThemeMode.creamPaper),
-                      ),
-                      _buildThemeCircle(
-                        'Sepia',
-                        AppColors.readerSepiaBg,
-                        settings.themeMode == ReaderThemeMode.warmSepia,
-                        () => reader.setThemeMode(ReaderThemeMode.warmSepia),
-                      ),
-                      _buildThemeCircle(
-                        'Indigo',
-                        AppColors.readerDarkBg,
-                        settings.themeMode == ReaderThemeMode.nightIndigo,
-                        () => reader.setThemeMode(ReaderThemeMode.nightIndigo),
-                      ),
-                      _buildThemeCircle(
-                        'AMOLED',
-                        AppColors.readerAmoledBg,
-                        settings.themeMode == ReaderThemeMode.darkAmoled,
-                        () => reader.setThemeMode(ReaderThemeMode.darkAmoled),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                    // Themes row
+                    Text(
+                      'PAPER THEME',
+                      style: AppTypography.labelSmall(
+                        color: isDark ? Colors.white70 : AppColors.textMuted,
+                      ).copyWith(letterSpacing: 1),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildThemeCircle(
+                          'Cream',
+                          AppColors.readerCreamBg,
+                          settings.themeMode == ReaderThemeMode.creamPaper,
+                          () => reader.setThemeMode(ReaderThemeMode.creamPaper),
+                        ),
+                        _buildThemeCircle(
+                          'Sepia',
+                          AppColors.readerSepiaBg,
+                          settings.themeMode == ReaderThemeMode.warmSepia,
+                          () => reader.setThemeMode(ReaderThemeMode.warmSepia),
+                        ),
+                        _buildThemeCircle(
+                          'Indigo',
+                          AppColors.readerDarkBg,
+                          settings.themeMode == ReaderThemeMode.nightIndigo,
+                          () => reader.setThemeMode(ReaderThemeMode.nightIndigo),
+                        ),
+                        _buildThemeCircle(
+                          'AMOLED',
+                          AppColors.readerAmoledBg,
+                          settings.themeMode == ReaderThemeMode.darkAmoled,
+                          () => reader.setThemeMode(ReaderThemeMode.darkAmoled),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
 
-                  // Font Size Slider
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'FONT SIZE (${settings.fontSize.toInt()}pt)',
-                        style: AppTypography.labelSmall(
-                          color: isDark ? Colors.white70 : AppColors.textMuted,
-                        ).copyWith(letterSpacing: 1),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('A', style: TextStyle(fontSize: 14, color: isDark ? Colors.white : Colors.black)),
-                      Expanded(
-                        child: Slider(
-                          value: settings.fontSize,
-                          min: 13.0,
-                          max: 26.0,
-                          divisions: 13,
-                          activeColor: AppColors.primaryAmber,
-                          onChanged: (val) {
-                            reader.setFontSize(val);
-                            setModalState(() {});
-                          },
+                    // Font Size Slider
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'FONT SIZE (${settings.fontSize.toInt()}pt)',
+                          style: AppTypography.labelSmall(
+                            color: isDark ? Colors.white70 : AppColors.textMuted,
+                          ).copyWith(letterSpacing: 1),
                         ),
-                      ),
-                      Text('A', style: TextStyle(fontSize: 22, color: isDark ? Colors.white : Colors.black)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('A', style: TextStyle(fontSize: 14, color: isDark ? Colors.white : Colors.black)),
+                        Expanded(
+                          child: Slider(
+                            value: settings.fontSize,
+                            min: 13.0,
+                            max: 26.0,
+                            divisions: 13,
+                            activeColor: AppColors.primaryAmber,
+                            onChanged: (val) {
+                              reader.setFontSize(val);
+                              setModalState(() {});
+                            },
+                          ),
+                        ),
+                        Text('A', style: TextStyle(fontSize: 22, color: isDark ? Colors.white : Colors.black)),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
 
-                  // Font Family Selector
-                  Text(
-                    'TYPEFACE',
-                    style: AppTypography.labelSmall(
-                      color: isDark ? Colors.white70 : AppColors.textMuted,
-                    ).copyWith(letterSpacing: 1),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildFontOption(
-                          'Literata (Serif)',
-                          settings.fontFamily == ReaderFontFamily.literata,
-                          () => reader.setFontFamily(ReaderFontFamily.literata),
-                          isDark,
+                    // Font Family Selector
+                    Text(
+                      'TYPEFACE',
+                      style: AppTypography.labelSmall(
+                        color: isDark ? Colors.white70 : AppColors.textMuted,
+                      ).copyWith(letterSpacing: 1),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildFontOption(
+                            'Literata',
+                            settings.fontFamily == ReaderFontFamily.literata,
+                            () => reader.setFontFamily(ReaderFontFamily.literata),
+                            isDark,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildFontOption(
-                          'Bricolage',
-                          settings.fontFamily == ReaderFontFamily.bricolage,
-                          () => reader.setFontFamily(ReaderFontFamily.bricolage),
-                          isDark,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildFontOption(
+                            'Bricolage',
+                            settings.fontFamily == ReaderFontFamily.bricolage,
+                            () => reader.setFontFamily(ReaderFontFamily.bricolage),
+                            isDark,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildFontOption(
-                          'Sans Serif',
-                          settings.fontFamily == ReaderFontFamily.sansSerif,
-                          () => reader.setFontFamily(ReaderFontFamily.sansSerif),
-                          isDark,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildFontOption(
+                            'Sans Serif',
+                            settings.fontFamily == ReaderFontFamily.sansSerif,
+                            () => reader.setFontFamily(ReaderFontFamily.sansSerif),
+                            isDark,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             );
           },

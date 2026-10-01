@@ -64,21 +64,24 @@ class _LibraryScreenState extends State<LibraryScreen>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'My Library',
-                                    style: AppTypography.displayMedium(
-                                        color: AppColors.secondaryIndigo),
-                                  ),
-                                  Text(
-                                    'Your personal digital bookshelf',
-                                    style: AppTypography.bodySmall(
-                                        color: AppColors.textSecondary),
-                                  ),
-                                ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'My Library',
+                                      style: AppTypography.displayMedium(
+                                          color: AppColors.secondaryIndigo),
+                                    ),
+                                    Text(
+                                      'Your personal digital bookshelf',
+                                      style: AppTypography.bodySmall(
+                                          color: AppColors.textSecondary),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              const SizedBox(width: 10),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14, vertical: 7),
@@ -196,20 +199,26 @@ class _LibraryScreenState extends State<LibraryScreen>
   }
 
   Widget _buildStatItem(String value, String label, IconData icon, Color color) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: AppTypography.titleMedium(color: AppColors.secondaryIndigo)
-              .copyWith(fontWeight: FontWeight.w800),
-        ),
-        Text(
-          label,
-          style: AppTypography.labelSmall(color: AppColors.textMuted),
-        ),
-      ],
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: AppTypography.titleMedium(color: AppColors.secondaryIndigo)
+                .copyWith(fontWeight: FontWeight.w800),
+          ),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall(color: AppColors.textMuted)
+                .copyWith(fontSize: 10.5),
+          ),
+        ],
+      ),
     );
   }
 

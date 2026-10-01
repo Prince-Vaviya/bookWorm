@@ -435,19 +435,26 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   }
 
   Widget _buildMetricColumn(String label, String value, String subtitle) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: AppTypography.labelLarge(color: AppColors.secondaryIndigo)
-              .copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: AppTypography.labelSmall(color: AppColors.textMuted),
-        ),
-      ],
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelLarge(color: AppColors.secondaryIndigo)
+                .copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.labelSmall(color: AppColors.textMuted),
+          ),
+        ],
+      ),
     );
   }
 
@@ -537,73 +544,84 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 top: 20,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 20,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Write a Review for "${book.title}"',
-                    style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      const Text('Rating: '),
-                      for (int i = 1; i <= 5; i++)
-                        IconButton(
-                          icon: Icon(
-                            i <= selectedRating ? Icons.star_rounded : Icons.star_border_rounded,
-                            color: AppColors.ratingStar,
-                          ),
-                          onPressed: () {
-                            setModalState(() {
-                              selectedRating = i.toDouble();
-                            });
-                          },
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Write a Review for "${book.title}"',
+                      style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text(
+                          'Rating: ',
+                          style: AppTypography.labelMedium(color: AppColors.secondaryIndigo)
+                              .copyWith(fontWeight: FontWeight.w700),
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: commentController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: 'Share your thoughts, insights, or favorite takeaways...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.borderLight),
+                        for (int i = 1; i <= 5; i++)
+                          IconButton(
+                            padding: const EdgeInsets.all(4),
+                            constraints: const BoxConstraints(),
+                            visualDensity: VisualDensity.compact,
+                            icon: Icon(
+                              i <= selectedRating ? Icons.star_rounded : Icons.star_border_rounded,
+                              color: AppColors.ratingStar,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              setModalState(() {
+                                selectedRating = i.toDouble();
+                              });
+                            },
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: commentController,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        hintText: 'Share your thoughts, insights, or favorite takeaways...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.borderLight),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (commentController.text.trim().isNotEmpty) {
-                          setState(() {
-                            book.reviews.insert(
-                              0,
-                              Review(
-                                id: 'rev-${DateTime.now().millisecondsSinceEpoch}',
-                                reviewerName: context.read<LibraryProvider>().userName,
-                                rating: selectedRating,
-                                date: 'Just now',
-                                comment: commentController.text.trim(),
-                                likesCount: 0,
-                              ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (commentController.text.trim().isNotEmpty) {
+                            setState(() {
+                              book.reviews.insert(
+                                0,
+                                Review(
+                                  id: 'rev-${DateTime.now().millisecondsSinceEpoch}',
+                                  reviewerName: context.read<LibraryProvider>().userName,
+                                  rating: selectedRating,
+                                  date: 'Just now',
+                                  comment: commentController.text.trim(),
+                                  likesCount: 0,
+                                ),
+                              );
+                            });
+                            Navigator.pop(ctx);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Review added successfully!')),
                             );
-                          });
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Review added successfully!')),
-                          );
-                        }
-                      },
-                      child: const Text('SUBMIT REVIEW'),
+                          }
+                        },
+                        child: const Text('SUBMIT REVIEW'),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

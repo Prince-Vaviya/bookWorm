@@ -87,125 +87,128 @@ class _ProfileScreenState extends State<ProfileScreen> {
             24,
             MediaQuery.of(ctx).viewInsets.bottom + 24,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.borderLight,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                'Edit Reader Identity',
-                style: AppTypography.headlineMedium(
-                  color: AppColors.secondaryIndigo,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Update your display name and reader description.',
-                style: AppTypography.bodySmall(color: AppColors.textSecondary),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'READER NAME',
-                style: AppTypography.labelSmall(
-                  color: AppColors.secondaryIndigo,
-                ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
-              ),
-              const SizedBox(height: 6),
-              TextField(
-                controller: nameCtrl,
-                decoration: InputDecoration(
-                  hintText: 'Your name',
-                  prefixIcon: const Icon(
-                    Icons.person_outline_rounded,
-                    color: AppColors.primaryAmber,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.canvasPaper,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.borderLight),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'READER TITLE / INTENTION',
-                style: AppTypography.labelSmall(
-                  color: AppColors.secondaryIndigo,
-                ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
-              ),
-              const SizedBox(height: 6),
-              TextField(
-                controller: titleCtrl,
-                decoration: InputDecoration(
-                  hintText: 'Your reader title',
-                  prefixIcon: const Icon(
-                    Icons.bookmark_outline_rounded,
-                    color: AppColors.primaryAmber,
-                  ),
-                  filled: true,
-                  fillColor: AppColors.canvasPaper,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.borderLight),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final newName = nameCtrl.text.trim();
-                    final newTitle = titleCtrl.text.trim();
-                    await auth.updateProfile(
-                      name: newName,
-                      title: newTitle,
-                    );
-                    library.updateProfile(
-                      name: newName,
-                      title: newTitle,
-                    );
-                    if (ctx.mounted) {
-                      Navigator.pop(ctx);
-                    }
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Reader profile updated successfully!'),
-                          backgroundColor: AppColors.secondaryIndigo,
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryAmber,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.borderLight,
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  child: Text(
-                    'SAVE CHANGES',
-                    style: AppTypography.labelLarge(
-                      color: Colors.white,
-                    ).copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  'Edit Reader Identity',
+                  style: AppTypography.headlineMedium(
+                    color: AppColors.secondaryIndigo,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  'Update your display name and reader description.',
+                  style: AppTypography.bodySmall(color: AppColors.textSecondary),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'READER NAME',
+                  style: AppTypography.labelSmall(
+                    color: AppColors.secondaryIndigo,
+                  ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: nameCtrl,
+                  decoration: InputDecoration(
+                    hintText: 'Your name',
+                    prefixIcon: const Icon(
+                      Icons.person_outline_rounded,
+                      color: AppColors.primaryAmber,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.canvasPaper,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.borderLight),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'READER TITLE / INTENTION',
+                  style: AppTypography.labelSmall(
+                    color: AppColors.secondaryIndigo,
+                  ).copyWith(fontWeight: FontWeight.w700, letterSpacing: 1),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: titleCtrl,
+                  decoration: InputDecoration(
+                    hintText: 'Your reader title',
+                    prefixIcon: const Icon(
+                      Icons.bookmark_outline_rounded,
+                      color: AppColors.primaryAmber,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.canvasPaper,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: AppColors.borderLight),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final newName = nameCtrl.text.trim();
+                      final newTitle = titleCtrl.text.trim();
+                      await auth.updateProfile(
+                        name: newName,
+                        title: newTitle,
+                      );
+                      library.updateProfile(
+                        name: newName,
+                        title: newTitle,
+                      );
+                      if (ctx.mounted) {
+                        Navigator.pop(ctx);
+                      }
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Reader profile updated successfully!'),
+                            backgroundColor: AppColors.secondaryIndigo,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryAmber,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'SAVE CHANGES',
+                      style: AppTypography.labelLarge(
+                        color: Colors.white,
+                      ).copyWith(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

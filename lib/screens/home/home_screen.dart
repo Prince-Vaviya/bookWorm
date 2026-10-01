@@ -50,21 +50,24 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${_getGreeting()}, $greetingName 👋',
-                          style: AppTypography.displayMedium(color: AppColors.secondaryIndigo)
-                              .copyWith(fontSize: isDesktop ? 28 : 24),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Your intellectual sanctuary is synced to cloud',
-                          style: AppTypography.bodySmall(color: AppColors.textSecondary),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${_getGreeting()}, $greetingName 👋',
+                            style: AppTypography.displayMedium(color: AppColors.secondaryIndigo)
+                                .copyWith(fontSize: isDesktop ? 28 : 24),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Your intellectual sanctuary is synced to cloud',
+                            style: AppTypography.bodySmall(color: AppColors.textSecondary),
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 12),
                     StreakBadge(streakDays: goal.currentStreakDays, isCompact: !isDesktop),
                   ],
                 ),
@@ -85,75 +88,149 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Row(
-                    children: [
-                      // Circular Progress Indicator
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          SizedBox(
-                            width: 62,
-                            height: 62,
-                            child: CircularProgressIndicator(
-                              value: goal.dailyProgressPercentage,
-                              strokeWidth: 6.5,
-                              backgroundColor: AppColors.surfaceContainerLow,
-                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                AppColors.primaryAmber,
-                              ),
-                              strokeCap: StrokeCap.round,
-                            ),
-                          ),
-                          Text(
-                            '${(goal.dailyProgressPercentage * 100).toInt()}%',
-                            style: AppTypography.labelSmall(color: AppColors.primaryAmber)
-                                .copyWith(fontWeight: FontWeight.w800),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 18),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  child: isDesktop
+                      ? Row(
                           children: [
-                            Text(
-                              'Today’s Reading Goal',
-                              style: AppTypography.labelLarge(color: AppColors.secondaryIndigo)
-                                  .copyWith(fontWeight: FontWeight.w700),
+                            // Circular Progress Indicator
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 62,
+                                  height: 62,
+                                  child: CircularProgressIndicator(
+                                    value: goal.dailyProgressPercentage,
+                                    strokeWidth: 6.5,
+                                    backgroundColor: AppColors.surfaceContainerLow,
+                                    valueColor: const AlwaysStoppedAnimation<Color>(
+                                      AppColors.primaryAmber,
+                                    ),
+                                    strokeCap: StrokeCap.round,
+                                  ),
+                                ),
+                                Text(
+                                  '${(goal.dailyProgressPercentage * 100).toInt()}%',
+                                  style: AppTypography.labelSmall(color: AppColors.primaryAmber)
+                                      .copyWith(fontWeight: FontWeight.w800),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 3),
-                            Text(
-                              '${goal.minutesReadToday} of ${goal.dailyTargetMinutes} mins completed today',
-                              style: AppTypography.bodySmall(color: AppColors.textMuted),
+                            const SizedBox(width: 18),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Today’s Reading Goal',
+                                    style: AppTypography.labelLarge(color: AppColors.secondaryIndigo)
+                                        .copyWith(fontWeight: FontWeight.w700),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    '${goal.minutesReadToday} of ${goal.dailyTargetMinutes} mins completed today',
+                                    style: AppTypography.bodySmall(color: AppColors.textMuted),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                if (priorityBook != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ReaderScreen(book: priorityBook),
+                                    ),
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.play_arrow_rounded, size: 18),
+                              label: const Text('START READING'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryAmber,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            Row(
+                              children: [
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 54,
+                                      height: 54,
+                                      child: CircularProgressIndicator(
+                                        value: goal.dailyProgressPercentage,
+                                        strokeWidth: 5.5,
+                                        backgroundColor: AppColors.surfaceContainerLow,
+                                        valueColor: const AlwaysStoppedAnimation<Color>(
+                                          AppColors.primaryAmber,
+                                        ),
+                                        strokeCap: StrokeCap.round,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${(goal.dailyProgressPercentage * 100).toInt()}%',
+                                      style: AppTypography.labelSmall(color: AppColors.primaryAmber)
+                                          .copyWith(fontWeight: FontWeight.w800, fontSize: 11),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Today’s Reading Goal',
+                                        style: AppTypography.labelLarge(color: AppColors.secondaryIndigo)
+                                            .copyWith(fontWeight: FontWeight.w700),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '${goal.minutesReadToday} of ${goal.dailyTargetMinutes} mins completed today',
+                                        style: AppTypography.bodySmall(color: AppColors.textMuted),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  if (priorityBook != null) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ReaderScreen(book: priorityBook),
+                                      ),
+                                    );
+                                  }
+                                },
+                                icon: const Icon(Icons.play_arrow_rounded, size: 18),
+                                label: const Text('START READING'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryAmber,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 11),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          if (priorityBook != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ReaderScreen(book: priorityBook),
-                              ),
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.play_arrow_rounded, size: 18),
-                        label: const Text('START READING'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryAmber,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isDesktop ? 20 : 16,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
                 const SizedBox(height: 26),
 
@@ -162,9 +239,11 @@ class HomeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Continue Reading',
-                        style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                      Expanded(
+                        child: Text(
+                          'Continue Reading',
+                          style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                        ),
                       ),
                       TextButton(
                         onPressed: () => onNavigateTab(2), // Jump to Library tab
@@ -203,9 +282,11 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Curated For You',
-                      style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                    Expanded(
+                      child: Text(
+                        'Curated For You',
+                        style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                      ),
                     ),
                     TextButton(
                       onPressed: () => onNavigateTab(1), // Jump to Explore
@@ -247,9 +328,11 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Trending in System Design & Wisdom',
-                      style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                    Expanded(
+                      child: Text(
+                        'Trending in System Design & Wisdom',
+                        style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
+                      ),
                     ),
                     TextButton(
                       onPressed: () => onNavigateTab(1),
