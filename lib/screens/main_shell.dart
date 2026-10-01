@@ -4,12 +4,10 @@ import '../../providers/auth_provider.dart';
 import '../../providers/library_provider.dart';
 import '../../utils/responsive_layout.dart';
 import '../../widgets/custom_bottom_nav.dart';
-import 'admin/admin_shell.dart';
 import 'auth/login_screen.dart';
 import 'home/home_screen.dart';
 import 'search/search_screen.dart';
 import 'library/library_screen.dart';
-import 'wishlist/wishlist_screen.dart';
 import 'profile/profile_screen.dart';
 
 class MainShell extends StatefulWidget {
@@ -26,13 +24,6 @@ class _MainShellState extends State<MainShell> {
     setState(() {
       _currentTabIndex = index;
     });
-  }
-
-  void _switchToAdmin() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const AdminShell()),
-    );
   }
 
   void _signOut() async {
@@ -56,7 +47,6 @@ class _MainShellState extends State<MainShell> {
       HomeScreen(onNavigateTab: _onTabSelected),
       const SearchScreen(),
       const LibraryScreen(),
-      const WishlistScreen(),
       const ProfileScreen(),
     ];
 
@@ -67,7 +57,6 @@ class _MainShellState extends State<MainShell> {
             DesktopSidebarNav(
               currentIndex: _currentTabIndex,
               onTabSelected: _onTabSelected,
-              onSwitchToAdmin: _switchToAdmin,
               onSignOut: _signOut,
               userName: auth.displayName.isNotEmpty ? auth.displayName : library.userName,
               userAvatarUrl: auth.photoUrl,

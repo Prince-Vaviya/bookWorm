@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../models/reading_goal.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/library_provider.dart';
 import '../../theme/app_theme.dart';
@@ -9,7 +8,6 @@ import '../../theme/app_typography.dart';
 import '../../utils/responsive_layout.dart';
 import '../../widgets/streak_badge.dart';
 import '../auth/login_screen.dart';
-import '../onboarding/onboarding_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -167,17 +165,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final newName = nameCtrl.text.trim();
+                    final newTitle = titleCtrl.text.trim();
+                    await auth.updateProfile(
+                      name: newName,
+                      title: newTitle,
+                    );
                     library.updateProfile(
-                      name: nameCtrl.text.trim(),
-                      title: titleCtrl.text.trim(),
+                      name: newName,
+                      title: newTitle,
                     );
-                    Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Reader profile updated successfully!'),
-                      ),
-                    );
+                    if (ctx.mounted) {
+                      Navigator.pop(ctx);
+                    }
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Reader profile updated successfully!'),
+                          backgroundColor: AppColors.secondaryIndigo,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryAmber,
@@ -219,19 +229,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1100),
+            constraints: const BoxConstraints(maxWidth: 800),
             child: ListView(
               physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.fromLTRB(
                 isDesktop ? 32 : 20,
-                20,
+                24,
                 isDesktop ? 32 : 20,
                 isDesktop ? 40 : 80,
               ),
               children: [
-                // Profile Header Card
+                // Page Header
+                Text(
+                  'Reader Profile',
+                  style: AppTypography.displayMedium(color: AppColors.secondaryIndigo)
+                      .copyWith(fontSize: isDesktop ? 28 : 24),
+                ),
+                Text(
+                  'Manage your sanctuary account and personal identity',
+                  style: AppTypography.bodySmall(color: AppColors.textSecondary),
+                ),
+                const SizedBox(height: 20),
+
+                // Profile Identity Hero Card
                 Container(
-                  padding: EdgeInsets.all(isDesktop ? 24 : 18),
+                  padding: EdgeInsets.all(isDesktop ? 26 : 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -239,458 +261,169 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.secondaryIndigo.withValues(alpha: 0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  child: Row(
+                  child: Column(
                     children: [
-                      // Avatar with Upload Overlay
-                      Stack(
+                      Row(
                         children: [
-                          CircleAvatar(
-                            radius: isDesktop ? 42 : 36,
-                            backgroundColor: AppColors.primaryLightAmber,
-                            backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-                                ? NetworkImage(avatarUrl)
-                                : null,
-                            child: avatarUrl == null || avatarUrl.isEmpty
-                                ? Text(
-                                    userInitial,
-                                    style: AppTypography.displayMedium(
-                                      color: AppColors.primaryDarkAmber,
-                                    ),
-                                  )
-                                : null,
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: InkWell(
-                              onTap: _isUploadingAvatar ? null : () => _pickAndUploadAvatar(context),
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: const BoxDecoration(
-                                  color: AppColors.secondaryIndigo,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: _isUploadingAvatar
-                                    ? const SizedBox(
-                                        width: 14,
-                                        height: 14,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
+                          // Avatar with Upload Overlay
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: isDesktop ? 44 : 36,
+                                backgroundColor: AppColors.primaryLightAmber,
+                                backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                                    ? NetworkImage(avatarUrl)
+                                    : null,
+                                child: avatarUrl == null || avatarUrl.isEmpty
+                                    ? Text(
+                                        userInitial,
+                                        style: AppTypography.displayMedium(
+                                          color: AppColors.primaryDarkAmber,
                                         ),
                                       )
-                                    : const Icon(
-                                        Icons.camera_alt_rounded,
-                                        color: Colors.white,
-                                        size: 14,
+                                    : null,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: InkWell(
+                                  onTap: _isUploadingAvatar ? null : () => _pickAndUploadAvatar(context),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.secondaryIndigo,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: _isUploadingAvatar
+                                        ? const SizedBox(
+                                            width: 14,
+                                            height: 14,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : const Icon(
+                                            Icons.camera_alt_rounded,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 18),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  displayName,
+                                  style: AppTypography.headlineLarge(
+                                    color: AppColors.secondaryIndigo,
+                                  ).copyWith(fontSize: isDesktop ? 26 : 22),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  userTitle,
+                                  style: AppTypography.bodySmall(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                if (auth.email.isNotEmpty) ...[
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.cloud_done_rounded,
+                                        size: 13,
+                                        color: AppColors.primaryDarkAmber,
                                       ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        auth.email,
+                                        style: AppTypography.labelSmall(
+                                          color: AppColors.textMuted,
+                                        ).copyWith(fontSize: 11),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                                const SizedBox(height: 8),
+                                StreakBadge(
+                                  streakDays: goal.currentStreakDays,
+                                  isCompact: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(height: 1, color: AppColors.borderLight),
+                      const SizedBox(height: 16),
+
+                      // Action Buttons (Edit Profile & Sign Out)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () => _showEditProfileModal(context, library, auth),
+                              icon: const Icon(Icons.edit_outlined, size: 16),
+                              label: const Text('Edit Identity'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.secondaryIndigo,
+                                side: const BorderSide(color: AppColors.borderLight),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () async {
+                                await auth.signOut();
+                                library.signOut();
+                                if (context.mounted) {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                                    (route) => false,
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.logout_rounded, size: 16),
+                              label: const Text('Sign Out'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFFEE2E2),
+                                foregroundColor: const Color(0xFFDC2626),
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(width: 18),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              displayName,
-                              style: AppTypography.headlineLarge(
-                                color: AppColors.secondaryIndigo,
-                              ).copyWith(fontSize: isDesktop ? 26 : 22),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              userTitle,
-                              style: AppTypography.bodySmall(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            if (auth.email.isNotEmpty) ...[
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.cloud_done_rounded,
-                                    size: 13,
-                                    color: AppColors.primaryDarkAmber,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    auth.email,
-                                    style: AppTypography.labelSmall(
-                                      color: AppColors.textMuted,
-                                    ).copyWith(fontSize: 11),
-                                  ),
-                                ],
-                              ),
-                            ],
-                            const SizedBox(height: 8),
-                            StreakBadge(
-                              streakDays: goal.currentStreakDays,
-                              isCompact: true,
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.edit_outlined,
-                          color: AppColors.secondaryIndigo,
-                        ),
-                        tooltip: 'Edit Profile',
-                        onPressed: () => _showEditProfileModal(context, library, auth),
-                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
-
-                // Responsive 2-column on Desktop vs 1-column on Mobile
-                if (isDesktop)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left Column: Analytics & Achievements
-                      Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Weekly Reading Activity',
-                              style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                            ),
-                            const SizedBox(height: 12),
-                            _buildWeeklyChartCard(goal),
-                            const SizedBox(height: 24),
-                            Text(
-                              'Reader Achievements',
-                              style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                            ),
-                            const SizedBox(height: 12),
-                            _buildAchievementsGrid(),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 24),
-
-                      // Right Column: Preferences & Settings
-                      Expanded(
-                        flex: 6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Preferences & Nest Settings',
-                              style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                            ),
-                            const SizedBox(height: 12),
-                            _buildSettingsList(context, library, auth),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                else ...[
-                  // Mobile Single Column View
-                  Text(
-                    'Weekly Reading Activity',
-                    style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildWeeklyChartCard(goal),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Reader Achievements',
-                    style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildAchievementsGrid(),
-                  const SizedBox(height: 28),
-                  Text(
-                    'Preferences & Nest Settings',
-                    style: AppTypography.headlineSmall(color: AppColors.secondaryIndigo),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildSettingsList(context, library, auth),
-                ],
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildWeeklyChartCard(ReadingGoal goal) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderLight),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.secondaryIndigo.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Daily Minutes',
-                style: AppTypography.labelLarge(color: AppColors.secondaryIndigo),
-              ),
-              Text(
-                'Avg 43 mins/day',
-                style: AppTypography.labelSmall(
-                  color: AppColors.primaryAmber,
-                ).copyWith(fontWeight: FontWeight.w700),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _buildBar('Mon', goal.weeklyMinutesHistory[0], 60),
-              _buildBar('Tue', goal.weeklyMinutesHistory[1], 60),
-              _buildBar('Wed', goal.weeklyMinutesHistory[2], 60),
-              _buildBar('Thu', goal.weeklyMinutesHistory[3], 60),
-              _buildBar('Fri', goal.weeklyMinutesHistory[4], 60),
-              _buildBar('Sat', goal.weeklyMinutesHistory[5], 60),
-              _buildBar(
-                'Sun',
-                goal.weeklyMinutesHistory[6],
-                60,
-                isToday: true,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAchievementsGrid() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildBadgeCard(
-            '🔥 14-Day Streak',
-            'Consistency Champion',
-            AppColors.primaryLightAmber,
-            AppColors.streakFlame,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildBadgeCard(
-            '📖 500+ Pages',
-            'Deep Thinker',
-            AppColors.secondaryContainer,
-            AppColors.secondaryIndigo,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildBadgeCard(
-            '🏛️ Polymath',
-            '4 Unique Genres',
-            const Color(0xFFDCFCE7),
-            AppColors.successGreen,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSettingsList(BuildContext context, LibraryProvider library, AuthProvider auth) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderLight),
-      ),
-      child: Column(
-        children: [
-          _buildSettingsTile(
-            icon: Icons.badge_outlined,
-            title: 'Reader Profile & Identity',
-            subtitle: '${auth.displayName.isNotEmpty ? auth.displayName : library.userName} • ${auth.userTitle.isNotEmpty ? auth.userTitle : library.userTitle}',
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-            onTap: () => _showEditProfileModal(context, library, auth),
-          ),
-          const Divider(height: 1, color: AppColors.borderLight),
-          _buildSettingsTile(
-            icon: Icons.cloud_sync_rounded,
-            title: 'Firebase Cloud Storage',
-            subtitle: 'Real-time synchronization active',
-            trailing: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: AppColors.primaryLightAmber,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                'ONLINE',
-                style: AppTypography.labelSmall(color: AppColors.primaryDarkAmber)
-                    .copyWith(fontSize: 10, fontWeight: FontWeight.w800),
-              ),
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.borderLight),
-          _buildSettingsTile(
-            icon: Icons.restart_alt_rounded,
-            title: 'Restart Onboarding Tour',
-            subtitle: 'Re-run first-time reader setup',
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-            onTap: () {
-              library.resetOnboarding();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const OnboardingScreen()),
-              );
-            },
-          ),
-          const Divider(height: 1, color: AppColors.borderLight),
-          _buildSettingsTile(
-            icon: Icons.notifications_none_rounded,
-            title: 'Daily Reading Reminders',
-            subtitle: '8:00 PM every evening',
-            trailing: Switch(
-              value: false,
-              activeThumbColor: AppColors.primaryAmber,
-              onChanged: (val) {},
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.borderLight),
-          _buildSettingsTile(
-            icon: Icons.logout_rounded,
-            title: 'Sign Out Account',
-            subtitle: 'Sign out from Firebase and return to login',
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-            onTap: () async {
-              await auth.signOut();
-              library.signOut();
-              if (context.mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  (route) => false,
-                );
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBar(
-    String day,
-    int minutes,
-    int maxMinutes, {
-    bool isToday = false,
-  }) {
-    final heightRatio = (minutes / maxMinutes).clamp(0.1, 1.0);
-    final barHeight = 80.0 * heightRatio;
-
-    return Column(
-      children: [
-        Text(
-          '${minutes}m',
-          style: AppTypography.labelSmall(
-            color: isToday ? AppColors.primaryAmber : AppColors.textMuted,
-          ).copyWith(fontWeight: isToday ? FontWeight.w700 : FontWeight.w400),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          width: 24,
-          height: barHeight,
-          decoration: BoxDecoration(
-            color: isToday ? AppColors.primaryAmber : AppColors.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(6),
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          day,
-          style: AppTypography.labelSmall(
-            color: isToday ? AppColors.secondaryIndigo : AppColors.textMuted,
-          ).copyWith(fontWeight: isToday ? FontWeight.w700 : FontWeight.w500),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBadgeCard(
-    String title,
-    String subtitle,
-    Color bgColor,
-    Color iconColor,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: AppTypography.labelSmall(
-              color: iconColor,
-            ).copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: AppTypography.labelSmall(
-              color: AppColors.textSecondary,
-            ).copyWith(fontSize: 10),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettingsTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Widget trailing,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: AppColors.secondaryIndigo),
-      title: Text(
-        title,
-        style: AppTypography.labelLarge(color: AppColors.secondaryIndigo),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: AppTypography.bodySmall(color: AppColors.textMuted),
-      ),
-      trailing: trailing,
-      onTap: onTap,
     );
   }
 }

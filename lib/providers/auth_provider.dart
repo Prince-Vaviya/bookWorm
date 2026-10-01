@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/firebase_service.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -65,6 +66,7 @@ class AuthProvider extends ChangeNotifier {
       (isAdmin ? 'Chief Archival Curator' : 'Avid Reader');
 
   void _initAuth() {
+    _loadPersistedSession();
     try {
       _user = FirebaseService.currentUser;
       if (_user != null) {
@@ -86,6 +88,54 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _loadPersistedSession() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final isAuth = prefs.getBool('auth_is_authenticated') ?? false;
+      if (isAuth && _user == null) {
+        _localEmail = prefs.getString('auth_email') ?? '';
+        _localDisplayName = prefs.getString('auth_name') ?? 'Reader';
+        _userRole = prefs.getString('auth_role') ?? 'reader';
+        _isLocalAuthenticated = true;
+        _userProfile = {
+          'name': _localDisplayName,
+          'email': _localEmail,
+          'role': _userRole,
+          'title': prefs.getString('auth_title') ??
+              (_userRole == 'admin' ? 'Chief Archival Curator' : 'Avid Reader'),
+        };
+        notifyListeners();
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _saveSession({
+    required String email,
+    required String name,
+    required String role,
+    String? title,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('auth_is_authenticated', true);
+      await prefs.setString('auth_email', email);
+      await prefs.setString('auth_name', name);
+      await prefs.setString('auth_role', role);
+      if (title != null) await prefs.setString('auth_title', title);
+    } catch (_) {}
+  }
+
+  Future<void> _clearPersistedSession() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('auth_is_authenticated');
+      await prefs.remove('auth_email');
+      await prefs.remove('auth_name');
+      await prefs.remove('auth_role');
+      await prefs.remove('auth_title');
+    } catch (_) {}
+  }
+
   Future<void> _loadProfile(String uid) async {
     final profile = await FirebaseService.getUserProfile(uid);
     if (profile != null) {
@@ -93,6 +143,12 @@ class AuthProvider extends ChangeNotifier {
       if (profile['role'] != null) {
         _userRole = profile['role'] as String;
       }
+      _saveSession(
+        email: email,
+        name: displayName,
+        role: _userRole,
+        title: userTitle,
+      );
       notifyListeners();
     }
   }
@@ -332,6 +388,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await FirebaseService.signOut();
     } catch (_) {}
+    await _clearPersistedSession();
     _user = null;
     _userProfile = null;
     _isLocalAuthenticated = false;
@@ -339,6 +396,46 @@ class AuthProvider extends ChangeNotifier {
     _localDisplayName = 'Reader';
     _userRole = 'reader';
     _isLoading = false;
+    notifyListeners();
+  }
+
+  /// Update user profile details (name and title) across local state, Firebase, Firestore, and session storage
+  Future<void> updateProfile({String? name, String? title}) async {
+    if (name != null && name.trim().isNotEmpty) {
+      _localDisplayName = name.trim();
+    }
+    _userProfile ??= {};
+    if (name != null && name.trim().isNotEmpty) {
+      _userProfile!['name'] = name.trim();
+    }
+    if (title != null && title.trim().isNotEmpty) {
+      _userProfile!['title'] = title.trim();
+    }
+
+    if (_user != null) {
+      try {
+        if (name != null && name.trim().isNotEmpty) {
+          await _user!.updateDisplayName(name.trim());
+          await _user!.reload();
+          _user = FirebaseService.currentUser;
+        }
+        await FirebaseService.updateUserProfile(
+          uid: _user!.uid,
+          name: name,
+          title: title,
+        );
+      } catch (e) {
+        debugPrint('Firebase profile update notice: $e');
+      }
+    }
+
+    await _saveSession(
+      email: email,
+      name: displayName,
+      role: _userRole,
+      title: userTitle,
+    );
+
     notifyListeners();
   }
 

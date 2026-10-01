@@ -422,10 +422,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 value: ShelfStatus.completed,
                 child: Text('Completed'),
               ),
-              DropdownMenuItem(
-                value: ShelfStatus.wishlist,
-                child: Text('Wishlist'),
-              ),
             ],
             onChanged: (newStatus) {
               if (newStatus != null) {

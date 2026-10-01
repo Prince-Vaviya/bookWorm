@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/library_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../theme/app_typography.dart';
 import '../admin/admin_shell.dart';
 import '../auth/login_screen.dart';
 import '../main_shell.dart';
-import '../onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -71,19 +71,23 @@ class _SplashScreenState extends State<SplashScreen>
 
     _logoController.forward();
 
-    // Check login state after 2.5s splash animation
-    _navigationTimer = Timer(const Duration(milliseconds: 2500), () {
+    // Check login state after splash animation
+    _navigationTimer = Timer(const Duration(milliseconds: 2000), () {
       if (mounted) {
+        final auth = context.read<AuthProvider>();
         final library = context.read<LibraryProvider>();
         final Widget destination;
 
-        if (library.isLoggedIn) {
-          if (library.userRole == 'admin') {
+        if (auth.isAuthenticated || library.isLoggedIn) {
+          if (auth.isAdmin || library.userRole == 'admin') {
+            library.loginAsAdmin();
             destination = const AdminShell();
-          } else if (library.isOnboardingCompleted) {
-            destination = const MainShell();
           } else {
-            destination = const OnboardingScreen();
+            library.loginAsReader(
+              name: auth.displayName,
+              isFirstTimeSignUp: false,
+            );
+            destination = const MainShell();
           }
         } else {
           destination = const LoginScreen();

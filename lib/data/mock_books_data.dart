@@ -272,7 +272,7 @@ You knew immediately that this is a multiplication problem, and probably knew th
         '"You could never convince a monkey to give you a banana by promising him limitless bananas after death in monkey heaven."',
     publishedYear: '2014',
     isbn: '978-0062316097',
-    shelfStatus: ShelfStatus.wishlist,
+    shelfStatus: ShelfStatus.wantToRead,
     isFavorite: false,
     chapters: [
       Chapter(
